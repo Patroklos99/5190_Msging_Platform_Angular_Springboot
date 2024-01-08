@@ -19,7 +19,7 @@ export class LoginService {
     console.log("login entro")
     localStorage.setItem(LoginService.KEY, login.username)
     this.username.next(localStorage.getItem(LoginService.KEY));
-    this.router.navigate(['/', 'chat']);
+    this.router.navigate(['/chat']);
   }
 
   logout() {
