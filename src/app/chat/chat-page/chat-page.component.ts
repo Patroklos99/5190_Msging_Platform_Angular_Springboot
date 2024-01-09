@@ -4,7 +4,7 @@ import { AuthenticationService } from "../../login/authentication.service";
 import { Message } from "../message.model";
 import { MessagesService } from "../messages.service";
 import {FormBuilder, ReactiveFormsModule} from "@angular/forms";
-import {DatePipe} from "@angular/common";
+import {AsyncPipe, DatePipe, NgForOf, NgIf} from "@angular/common";
 
 @Component({
   selector: "app-chat-page",
@@ -12,7 +12,10 @@ import {DatePipe} from "@angular/common";
   styleUrls: ["./chat-page.component.css"],
   imports: [
     DatePipe,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    AsyncPipe,
+    NgForOf,
+    NgIf
   ],
   standalone: true
 })
@@ -54,6 +57,7 @@ export class ChatPageComponent implements OnInit, OnDestroy {
         username: this.username,
         timestamp: Date.now(),
       });
+      this.messages$.subscribe(m => this.messages = m);
     }
     this.messageForm.reset();
   }
