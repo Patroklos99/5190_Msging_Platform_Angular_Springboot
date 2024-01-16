@@ -6,6 +6,7 @@ import {MessagesService} from "../messages.service";
 import {FormBuilder, ReactiveFormsModule} from "@angular/forms";
 import {AsyncPipe, DatePipe, NgForOf, NgIf} from "@angular/common";
 import {LoginService} from '../../login/login.service';
+import {MessagesComponent} from "../messages/messages.component";
 
 @Component({
 	selector: "app-chat-page",
@@ -16,7 +17,8 @@ import {LoginService} from '../../login/login.service';
 		ReactiveFormsModule,
 		AsyncPipe,
 		NgForOf,
-		NgIf
+		NgIf,
+		MessagesComponent
 	],
 	standalone: true
 })
@@ -63,20 +65,6 @@ export class ChatPageComponent implements OnInit, OnDestroy {
 			this.messages$.subscribe(m => this.messages = m);
 		}
 		this.messageForm.reset();
-	}
-
-	/** Afficher la date seulement si la date du message précédent est différente du message courant. */
-	showDateHeader(messages: Message[] | null, i: number) {
-		if (messages != null) {
-			if (i === 0) {
-				return true;
-			} else {
-				const prev = new Date(messages[i - 1].timestamp).setHours(0, 0, 0, 0);
-				const curr = new Date(messages[i].timestamp).setHours(0, 0, 0, 0);
-				return prev != curr;
-			}
-		}
-		return false;
 	}
 
 	onLogout() {
