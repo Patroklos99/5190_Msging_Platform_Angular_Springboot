@@ -23,7 +23,7 @@ import {MessagesComponent} from "../messages/messages.component";
 	standalone: true
 })
 export class ChatPageComponent implements OnInit, OnDestroy {
-	messages$ = this.messagesService.getMessages();
+	mensaje = this.messagesService.getMessages();
 	username$ = this.authenticationService.getUsername();
 
 	messageForm = this.fb.group({
@@ -62,7 +62,7 @@ export class ChatPageComponent implements OnInit, OnDestroy {
 				username: this.username,
 				timestamp: Date.now(),
 			});
-			this.messages$.subscribe(m => this.messages = m);
+			this.mensaje.subscribe(m => this.messages = m);
 		}
 		this.messageForm.reset();
 	}
