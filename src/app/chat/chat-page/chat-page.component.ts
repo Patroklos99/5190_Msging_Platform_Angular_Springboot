@@ -7,67 +7,60 @@ import {FormBuilder, ReactiveFormsModule} from "@angular/forms";
 import {AsyncPipe, DatePipe, NgForOf, NgIf} from "@angular/common";
 import {LoginService} from '../../login/login.service';
 import {MessagesComponent} from "../messages/messages.component";
+import {NewMsgFormComponent} from "../new-msg-form/new-msg-form.component";
 
 @Component({
-	selector: "app-chat-page",
-	templateUrl: "./chat-page.component.html",
-	styleUrls: ["./chat-page.component.css"],
-	imports: [
-		DatePipe,
-		ReactiveFormsModule,
-		AsyncPipe,
-		NgForOf,
-		NgIf,
-		MessagesComponent
-	],
-	standalone: true
+  selector: "app-chat-page",
+  templateUrl: "./chat-page.component.html",
+  styleUrls: ["./chat-page.component.css"],
+  imports: [
+    DatePipe,
+    ReactiveFormsModule,
+    AsyncPipe,
+    NgForOf,
+    NgIf,
+    MessagesComponent,
+    NewMsgFormComponent
+  ],
+  standalone: true
 })
 export class ChatPageComponent implements OnInit, OnDestroy {
-	mensaje = this.messagesService.getMessages();
-	username$ = this.authenticationService.getUsername();
+  mensaje = this.messagesService.getMessages();
+  username$ = this.authenticationService.getUsername();
+  messages: Message[] = [];
+  username: string | null = null;
+  usernameSubscription: Subscription;
 
-	messageForm = this.fb.group({
-		msg: "",
-	});
+  constructor(
+    private messagesService: MessagesService,
+    private loginService: LoginService,
+    private authenticationService: AuthenticationService,
+  ) {
+    this.usernameSubscription = this.username$.subscribe((u) => {
+      this.username = u;
+    });
 
-	username: string | null = null;
-	usernameSubscription: Subscription;
+  }
 
-	messages: Message[] = [];
+  ngOnDestroy(): void {
+    throw new Error("Method not implemented.");
+  }
 
-	constructor(
-		private fb: FormBuilder,
-		private messagesService: MessagesService,
-		private authenticationService: AuthenticationService,
-		private loginService: LoginService
-	) {
-		this.usernameSubscription = this.username$.subscribe((u) => {
-			this.username = u;
-		});
-	}
+  ngOnInit(): void {
+  }
 
-	ngOnInit(): void {
-	}
+  onLogout() {
+    this.loginService.logout()
+  }
 
-	ngOnDestroy(): void {
-		if (this.usernameSubscription) {
-			this.usernameSubscription.unsubscribe();
-		}
-	}
-
-	onPublishMessage() {
-		if (this.username && this.messageForm.valid && this.messageForm.value.msg) {
-			this.messagesService.postMessage({
-				text: this.messageForm.value.msg,
-				username: this.username,
-				timestamp: Date.now(),
-			});
-			this.mensaje.subscribe(m => this.messages = m);
-		}
-		this.messageForm.reset();
-	}
-
-	onLogout() {
-		this.loginService.logout()
-	}
+  onSendMsg(msgTxt: string ) {
+    if (this.username) {
+      this.messagesService.postMessage({
+        text: msgTxt,
+        username: this.username,
+        timestamp: Date.now(),
+      });
+      this.mensaje.subscribe(m => this.messages = m);
+    }
+  }
 }
