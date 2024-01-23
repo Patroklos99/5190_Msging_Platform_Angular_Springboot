@@ -1,0 +1,15 @@
+/home/kaped/IdeaProjects/5190_Messaging_Platform_1/backend/src/main/java/com/inf5190/chat/ChatApplication.java
+/home/kaped/IdeaProjects/5190_Messaging_Platform_1/backend/src/main/java/com/inf5190/chat/messages/repository/MessageRepository.java
+/home/kaped/IdeaProjects/5190_Messaging_Platform_1/backend/src/main/java/com/inf5190/chat/websocket/WebSocketManager.java
+/home/kaped/IdeaProjects/5190_Messaging_Platform_1/backend/src/main/java/com/inf5190/chat/auth/session/SessionData.java
+/home/kaped/IdeaProjects/5190_Messaging_Platform_1/backend/src/main/java/com/inf5190/chat/config/CorsConfig.java
+/home/kaped/IdeaProjects/5190_Messaging_Platform_1/backend/src/main/java/com/inf5190/chat/messages/MessageController.java
+/home/kaped/IdeaProjects/5190_Messaging_Platform_1/backend/src/main/java/com/inf5190/chat/websocket/WebSocketHandler.java
+/home/kaped/IdeaProjects/5190_Messaging_Platform_1/backend/src/main/java/com/inf5190/chat/auth/session/SessionManager.java
+/home/kaped/IdeaProjects/5190_Messaging_Platform_1/backend/src/main/java/com/inf5190/chat/auth/filter/AuthFilter.java
+/home/kaped/IdeaProjects/5190_Messaging_Platform_1/backend/src/main/java/com/inf5190/chat/auth/model/LoginResponse.java
+/home/kaped/IdeaProjects/5190_Messaging_Platform_1/backend/src/main/java/com/inf5190/chat/auth/AuthController.java
+/home/kaped/IdeaProjects/5190_Messaging_Platform_1/backend/src/main/java/com/inf5190/chat/auth/model/LoginRequest.java
+/home/kaped/IdeaProjects/5190_Messaging_Platform_1/backend/src/main/java/com/inf5190/chat/websocket/config/WebSocketConfig.java
+/home/kaped/IdeaProjects/5190_Messaging_Platform_1/backend/src/main/java/com/inf5190/chat/messages/model/Message.java
+/home/kaped/IdeaProjects/5190_Messaging_Platform_1/backend/src/main/java/com/inf5190/chat/auth/session/SessionDataAccessor.java
