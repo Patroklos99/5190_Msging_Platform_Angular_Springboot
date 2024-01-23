@@ -30,7 +30,9 @@ public class AuthController {
 
     @PostMapping(AUTH_LOGIN_PATH)
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest) {
-        return null;
+        SessionData sessionData = new SessionData(loginRequest.username());
+        LoginResponse loginResponse = new LoginResponse(sessionManager.addSession(sessionData));
+        return ResponseEntity.ok(loginResponse);
     }
 
     @PostMapping(AUTH_LOGOUT_PATH)
