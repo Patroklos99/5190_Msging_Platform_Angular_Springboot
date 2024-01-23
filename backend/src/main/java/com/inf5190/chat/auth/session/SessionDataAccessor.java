@@ -1,6 +1,6 @@
 package com.inf5190.chat.auth.session;
 
-import javax.servlet.http.HttpServletRequest;
+import javax.servlet.ServletContext;
 
 import org.springframework.stereotype.Component;
 
@@ -10,13 +10,23 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class SessionDataAccessor {
+    private static final String TOKEN_KEY = "TOKEN_KEY";
     private static final String SESSION_DATA_KEY = "SESSION_DATA_KEY";
 
-    public void setSessionData(HttpServletRequest request, SessionData sessionData) {
-        request.setAttribute(SESSION_DATA_KEY, sessionData);
+    public void setSessionData(ServletContext context, SessionData sessionData) {
+        context.setAttribute(SESSION_DATA_KEY, sessionData);
     }
 
-    public SessionData getSessionData(HttpServletRequest request) {
-        return (SessionData) request.getAttribute(SESSION_DATA_KEY);
+    public void setToken(ServletContext context, String token) {
+        context.setAttribute(TOKEN_KEY, token);
     }
+
+    public SessionData getSessionData(ServletContext context) {
+        return (SessionData) context.getAttribute(SESSION_DATA_KEY);
+    }
+
+    public String getToken(jakarta.servlet.ServletContext context) {
+        return (String) context.getAttribute(TOKEN_KEY);
+    }
+
 }

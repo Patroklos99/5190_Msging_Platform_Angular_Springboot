@@ -1,43 +1,48 @@
 package com.inf5190.chat.auth;
 
-import javax.servlet.http.Cookie;
-
 import com.inf5190.chat.auth.session.SessionData;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.context.ServletContextAware;
 
 import com.inf5190.chat.auth.model.LoginRequest;
 import com.inf5190.chat.auth.model.LoginResponse;
+import com.inf5190.chat.auth.session.SessionDataAccessor;
 import com.inf5190.chat.auth.session.SessionManager;
 
 /**
  * Contrôleur qui gère l'API de login et logout.
+ * <p>
+ * Implémente ServletContextAware pour recevoir le contexte de la requête HTTP.
  */
 @RestController()
-public class AuthController {
-    public static final String AUTH_LOGIN_PATH = "/auth/login";
-    public static final String AUTH_LOGOUT_PATH = "/auth/logout";
-    public static final String SESSION_ID_COOKIE_NAME = "sid";
+public class AuthController implements ServletContextAware {
 
     private final SessionManager sessionManager;
+    private final SessionDataAccessor sessionDataAccessor;
+    private jakarta.servlet.ServletContext servletContext;
 
-    public AuthController(SessionManager sessionManager) {
+    public AuthController(SessionManager sessionManager, SessionDataAccessor sessionDataAccessor) {
         this.sessionManager = sessionManager;
+        this.sessionDataAccessor = sessionDataAccessor;
     }
 
-    @PostMapping(AUTH_LOGIN_PATH)
-    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest) {
+    @PostMapping("auth/login")
+    public LoginResponse login(@RequestBody LoginRequest loginRequest) {
         SessionData sessionData = new SessionData(loginRequest.username());
-        LoginResponse loginResponse = new LoginResponse(sessionManager.addSession(sessionData));
-        return ResponseEntity.ok(loginResponse);
+        String token = sessionManager.addSession(sessionData);
+        return new LoginResponse(token);
     }
 
-    @PostMapping(AUTH_LOGOUT_PATH)
-    public ResponseEntity<Void> logout(@CookieValue("sid") Cookie sessionCookie) {
-        // À faire...
-        return null;
+    @PostMapping("auth/logout")
+    public void logout() {
+        String token = sessionDataAccessor.getToken(servletContext);
+        sessionManager.removeSession(token);
+    }
+
+    @Override
+    public void setServletContext(jakarta.servlet.ServletContext servletContext) {
+        this.servletContext = servletContext;
     }
 }

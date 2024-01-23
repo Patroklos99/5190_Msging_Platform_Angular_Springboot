@@ -5,12 +5,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 
-import com.inf5190.chat.auth.AuthController;
 import com.inf5190.chat.auth.filter.AuthFilter;
 
 import com.inf5190.chat.auth.session.SessionDataAccessor;
 import com.inf5190.chat.auth.session.SessionManager;
-import com.inf5190.chat.messages.MessageController;
 
 /**
  * Application spring boot.
@@ -33,8 +31,9 @@ public class ChatApplication {
 
         registrationBean.setFilter(new AuthFilter(sessionDataAccessor,
                 sessionManager));
-        registrationBean.addUrlPatterns(MessageController.MESSAGES_PATH, AuthController.AUTH_LOGOUT_PATH);
+        registrationBean.addUrlPatterns("/messages", "/auth/logout");
 
         return registrationBean;
     }
+
 }
