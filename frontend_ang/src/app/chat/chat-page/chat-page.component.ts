@@ -8,6 +8,7 @@ import {AsyncPipe, DatePipe, NgForOf, NgIf} from "@angular/common";
 import {LoginService} from '../../login/login.service';
 import {MessagesComponent} from "../messages/messages.component";
 import {NewMsgFormComponent} from "../new-msg-form/new-msg-form.component";
+import { Router } from '@angular/router';
 
 @Component({
   selector: "app-chat-page",
@@ -35,6 +36,7 @@ export class ChatPageComponent implements OnInit, OnDestroy {
     private messagesService: MessagesService,
     private loginService: LoginService,
     private authenticationService: AuthenticationService,
+    private router : Router
   ) {
     this.usernameSubscription = this.username$.subscribe((u) => {
       this.username = u;
@@ -51,6 +53,7 @@ export class ChatPageComponent implements OnInit, OnDestroy {
 
   onLogout() {
     this.loginService.logout()
+    this.router.navigate(['/'])
   }
 
   onSendMsg(msgTxt: string ) {

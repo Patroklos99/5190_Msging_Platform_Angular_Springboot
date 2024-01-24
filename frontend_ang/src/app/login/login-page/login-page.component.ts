@@ -2,6 +2,7 @@ import {Component, OnInit} from "@angular/core";
 import {UserCredentials} from "../model/user-credentials";
 import {LoginFormComponent} from "../login-form/login-form.component";
 import {LoginService} from "../login.service";
+import { Router } from '@angular/router';
 
 @Component({
 	selector: "app-login-page",
@@ -13,13 +14,14 @@ import {LoginService} from "../login.service";
 	standalone: true
 })
 export class LoginPageComponent implements OnInit {
-	constructor(private loginService: LoginService) {
+	constructor(private router: Router, private loginService: LoginService) {
 	}
 
 	ngOnInit(): void {
 	}
 
 	onLogin(userCredentials: UserCredentials) {
-    	this.loginService.login(userCredentials)
+		this.loginService.login(userCredentials)
+		this.router.navigate(['/chat'])
 	}
 }
