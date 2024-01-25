@@ -15,17 +15,16 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public class MessageRepository {
-    private final List<Message> messages = new ArrayList<Message>();
+    private final List<Message> messages = new ArrayList<>();
     private final AtomicLong idGenerator = new AtomicLong(0);
 
     public List<Message> getMessages(Long fromId) {
-        // À faire...
-        return new ArrayList<>();
+        return messages;
     }
 
     public Message createMessage(Message message) {
-        // À faire...
-        return null;
+        messages.add(message);
+        return message;
     }
 
 }

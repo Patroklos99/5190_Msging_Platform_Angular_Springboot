@@ -1,4 +1,4 @@
-// debugger;
+debugger;
 import {Injectable} from '@angular/core';
 import {BehaviorSubject, firstValueFrom, Observable} from 'rxjs';
 import {HttpClient} from "@angular/common/http";
@@ -10,7 +10,7 @@ import {environment} from "../../environments/environment";
 export class LoginService {
 	static KEY = 'username';
 	static TOKEN_KEY = 'QWERTY';
-	private token = '';
+	private token : string | null | undefined ;
 	private username = new BehaviorSubject<string | null>(null);
 
 	constructor(private httpClient: HttpClient) {
@@ -22,25 +22,35 @@ export class LoginService {
 	}
 
 	async login(login: { username: string; password: string }) {
-		const loginResponse = await firstValueFrom(
+		const reponse = await firstValueFrom(
 			this.httpClient.post<{ token: string }>(
-				`${environment.backendUrl}/auth/login`,
-				{
+				`${environment.backendUrl}/auth/login`, {
 					username: login.username,
 					password: login.password,
 				}
 			)
-		);
-		localStorage.setItem(LoginService.KEY, login.username)
-		localStorage.setItem(LoginService.TOKEN_KEY, loginResponse.token)
-		this.token = loginResponse.token;
-		this.username.next(login.username)
+		)
+		localStorage.setItem(LoginService.KEY, login.username);
+		localStorage.setItem(LoginService.TOKEN_KEY, reponse.token);
+		this.token = reponse.token;
+		this.username.next(login.username);
 	}
 
-	logout() {
-		localStorage.removeItem(LoginService.KEY)
-		this.username.next(null);
-		// this.router.navigate(['']);
+	async logout() {
+		try {
+			const reponse = await firstValueFrom(
+				this.httpClient.post(
+					`${environment.backendUrl}/auth/logout`, {}
+				)
+			)
+		} catch (e) {
+
+		} finally {
+			localStorage.removeItem(LoginService.KEY);
+			localStorage.removeItem(LoginService.TOKEN_KEY);
+			this.token = null;
+			this.username.next(null);
+		}
 	}
 
 	getUsername(): Observable<string | null> {
