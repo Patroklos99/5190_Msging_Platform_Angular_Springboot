@@ -16,11 +16,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @PropertySource("classpath:cors.properties")
 public class CorsConfig {
 
-/*    @Value("${cors.allowedOrigins}")
-    private String allowedOrigins;*/
-    @Autowired
-    @Qualifier("allowedOrigins")
-    private String[] allowedOrigins;
+    @Value("${cors.allowedOrigins}")
+    private String allowedOrigins;
 
 
     @Bean

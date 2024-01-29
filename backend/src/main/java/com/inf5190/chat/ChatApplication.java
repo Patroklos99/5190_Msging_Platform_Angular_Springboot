@@ -23,29 +23,4 @@ public class ChatApplication {
         SpringApplication.run(ChatApplication.class, args);
     }
 
-    @Value("${cors.allowedOrigins}")
-	private String allowedOriginsProperty;
-
-    /**
-     * Fonction qui enregistre le filtre d'authorization.
-     */
-    @Bean
-    public FilterRegistrationBean<AuthFilter> authenticationFilter(
-            SessionDataAccessor sessionDataAccessor,
-            SessionManager sessionManager) {
-        FilterRegistrationBean<AuthFilter> registrationBean = new FilterRegistrationBean<>();
-
-        registrationBean.setFilter(new AuthFilter(sessionDataAccessor,
-                sessionManager));
-        registrationBean.addUrlPatterns("/messages", "/auth/logout");
-
-        return registrationBean;
-    }
-
-    @Bean("allowedOrigins")
-	public String[] getAllowedOrigins() {
-		return Optional.ofNullable(System.getenv("ALLOWED_ORIGINS"))
-				.orElse(this.allowedOriginsProperty).split(",");
-	}
-
 }

@@ -58,11 +58,20 @@
             <version>4.0.1</version>
         </dependency>
 
-        <!--        <dependency>-->
-        <!--            <groupId>org.apache.maven.plugins</groupId>-->
-        <!--            <artifactId>maven-compiler-plugin</artifactId>-->
-        <!--            <version>3.12.1</version>-->
-        <!--        </dependency>-->
+        <dependency>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <version>3.12.1</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/jakarta.servlet/jakarta.servlet-api -->
+        <dependency>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
+            <version>6.1.0-M1</version>
+            <scope>provided</scope>
+        </dependency>
+
     </dependencies>
 
 

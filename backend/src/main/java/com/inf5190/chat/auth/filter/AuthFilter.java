@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import jakarta.servlet.FilterConfig;
+import jakarta.servlet.ServletContext;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 
@@ -79,8 +80,8 @@ public class AuthFilter implements Filter, jakarta.servlet.Filter {
 
         // On place le token et les données de session dans le contexte
         // pour que les contrôleurs puissent y avoir accès.
-        this.sessionDataAccessor.setToken(httpRequest.getServletContext(), token);
-        this.sessionDataAccessor.setSessionData(httpRequest.getServletContext(), data);
+        this.sessionDataAccessor.setToken((ServletContext) httpRequest.getServletContext(), token);
+        this.sessionDataAccessor.setSessionData((ServletContext) httpRequest.getServletContext(), data);
 
         chain.doFilter(request, response);
     }

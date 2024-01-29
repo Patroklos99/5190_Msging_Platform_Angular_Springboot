@@ -58,6 +58,7 @@ export class ChatPageComponent implements OnInit, OnDestroy {
   onSendMsg(msgTxt: string ) {
     if (this.username) {
       this.messagesService.postMessage({
+        id: null,
         text: msgTxt,
         username: this.username,
         timestamp: Date.now(),
