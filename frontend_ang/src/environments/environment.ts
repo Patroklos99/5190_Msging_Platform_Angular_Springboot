@@ -4,5 +4,6 @@
 
 export const environment = {
   production: false,
-  backendUrl: "http://127.0.0.1:8080"
+  backendUrl: "http://127.0.0.1:8080",
+  wsUrl: "ws://127.0.0.1:8080"
 };
