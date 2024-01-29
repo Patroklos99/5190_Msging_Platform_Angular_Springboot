@@ -1,16 +1,18 @@
-import {Injectable} from "@angular/core";
+import {Injectable, OnDestroy} from "@angular/core";
 import {BehaviorSubject, firstValueFrom, Observable} from "rxjs";
 import {Message} from "./message.model";
 import {HttpClient} from "@angular/common/http";
 import {environment} from "../../environments/environment";
+import {WebsocketService} from "../app.WebsocketService";
 
 @Injectable({
 	providedIn: "root",
 })
-export class MessagesService {
+export class MessagesService implements OnDestroy{
 	messages = new BehaviorSubject<Message[]>([]);
 
-	constructor(private httpClient: HttpClient) {
+	constructor(private httpClient: HttpClient, private webSocket: WebsocketService) {
+		this.connectToWebSocket();
 	}
 
 	async postMessage(message: Message): Promise<void> {
@@ -25,14 +27,27 @@ export class MessagesService {
 				}
 			)
 		)
-		// const currentMessages = this.messages.value; // Récupérer le tab actuel des msgs à partir du BehaviorSubject
-		// const updatedMessage = [...currentMessages, message]  // Ajouter le nouveau msg au tab existant
-		// this.messages.next(updatedMessage) //Emettre nouveau tab de msg updaté
-		this.messages.next([...this.messages.value, message])
-		// console.log(response)
+	}
+
+	ngOnDestroy() : void {
+		if (this.webSocket) {
+			this.webSocket.disconnect()
+		}
 	}
 
 	getMessages(): Observable<Message[]> {
+		return this.messages.asObservable();
+	}
+
+	private connectToWebSocket() {
+		this.webSocket.connect().subscribe((data) => {
+			if (data === "notif") {
+				this.refreshMessages()
+			}
+		})
+	}
+
+	private refreshMessages() {
 		const response = firstValueFrom(
 			this.httpClient.get<Message[]>(
 				`${environment.backendUrl}/messages`,
@@ -40,7 +55,5 @@ export class MessagesService {
 			)
 		)
 		response.then(list => this.messages.next(list));
-		return this.messages.asObservable();
 	}
-
 }

@@ -36,6 +36,7 @@ public class MessageController implements ServletContextAware {
     @PostMapping(MESSAGES_PATH)
     public ResponseEntity<String> createMessage(@RequestBody Message msgBody) {
         messageRepository.createMessage(msgBody);
+        webSocketManager.notifySessions();
         return ResponseEntity.status(HttpStatus.CREATED).body("\"Msg created\"");
     }
 
