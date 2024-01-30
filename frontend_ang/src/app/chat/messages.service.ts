@@ -1,7 +1,7 @@
 import {Injectable, OnDestroy} from "@angular/core";
 import {BehaviorSubject, firstValueFrom, Observable} from "rxjs";
 import {Message} from "./message.model";
-import {HttpClient} from "@angular/common/http";
+import {HttpClient, HttpParams} from "@angular/common/http";
 import {environment} from "../../environments/environment";
 import {WebsocketService} from "../app.WebsocketService";
 
@@ -48,12 +48,18 @@ export class MessagesService implements OnDestroy{
 	}
 
 	private refreshMessages() {
+		const lastMsg = this.messages.value[this.messages.value.length-1];
+		let params = new HttpParams();
+		if (lastMsg) {
+			params = params.append("fromId", lastMsg.id!.toString());
+		}
+
 		const response = firstValueFrom(
 			this.httpClient.get<Message[]>(
 				`${environment.backendUrl}/messages`,
-				{}
+				{params}
 			)
-		)
-		response.then(list => this.messages.next(list));
+		);
+		response.then(list => this.messages.next([...this.messages.value, ...list]));
 	}
 }

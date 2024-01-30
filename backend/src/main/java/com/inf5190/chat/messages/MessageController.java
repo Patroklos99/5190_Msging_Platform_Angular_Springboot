@@ -41,8 +41,8 @@ public class MessageController implements ServletContextAware {
     }
 
     @GetMapping(MESSAGES_PATH)
-    public List<Message> getMessages() {
-        return messageRepository.getMessages(null);
+    public List<Message> getMessages(@RequestParam Optional<Long> fromId) {
+        return messageRepository.getMessages(fromId);
     }
 
     @Override
