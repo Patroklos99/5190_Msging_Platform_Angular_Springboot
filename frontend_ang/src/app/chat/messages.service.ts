@@ -35,16 +35,16 @@ export class MessagesService implements OnDestroy{
 		}
 	}
 
-	getMessages(): Observable<Message[]> {
-		return this.messages.asObservable();
-	}
-
 	private connectToWebSocket() {
 		this.webSocket.connect().subscribe((data) => {
 			if (data === "notif") {
 				this.refreshMessages()
 			}
 		})
+	}
+
+	getMessages(): Observable<Message[]> {
+		return this.messages.asObservable();
 	}
 
 	private refreshMessages() {
