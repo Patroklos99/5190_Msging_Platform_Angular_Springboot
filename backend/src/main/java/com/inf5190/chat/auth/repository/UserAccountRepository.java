@@ -3,11 +3,8 @@ package com.inf5190.chat.auth.repository;
 import java.util.concurrent.ExecutionException;
 
 import com.google.api.core.ApiFuture;
-import com.google.cloud.firestore.CollectionReference;
-import com.google.cloud.firestore.DocumentReference;
-import com.google.cloud.firestore.WriteResult;
+import com.google.cloud.firestore.*;
 import org.springframework.stereotype.Repository;
-import com.google.cloud.firestore.Firestore;
 import com.google.firebase.cloud.FirestoreClient;
 
 @Repository
@@ -17,7 +14,13 @@ public class UserAccountRepository {
 
     public FirestoreUserAccount getUserAccount(String username) throws
             InterruptedException, ExecutionException {
-        throw new UnsupportedOperationException("A faire");
+        DocumentReference docRef = firestore.collection(COLLECTION_NAME).document(username);
+        ApiFuture<DocumentSnapshot> future = docRef.get();
+        DocumentSnapshot document = future.get();
+        if (document.exists())
+            return document.toObject(FirestoreUserAccount.class);
+        return null;
+//        throw new UnsupportedOperationException("A faire");
     }
 
     public void setUserAccount(FirestoreUserAccount userAccount) throws
