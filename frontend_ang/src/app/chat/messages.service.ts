@@ -13,6 +13,7 @@ export class MessagesService implements OnDestroy{
 
 	constructor(private httpClient: HttpClient, private webSocket: WebsocketService) {
 		this.connectToWebSocket();
+		// this.refreshMessages();
 	}
 
 	async postMessage(message: Message): Promise<void> {
@@ -47,7 +48,7 @@ export class MessagesService implements OnDestroy{
 		return this.messages.asObservable();
 	}
 
-	private refreshMessages() {
+	refreshMessages() {
 		const lastMsg = this.messages.value[this.messages.value.length-1];
 		let params = new HttpParams();
 		if (lastMsg) {

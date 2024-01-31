@@ -48,6 +48,8 @@ export class ChatPageComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.messagesService.refreshMessages();
+    this.mensaje.subscribe(m => {this.messages = m});
   }
 
   onLogout() {
