@@ -26,10 +26,10 @@ public class UserAccountRepository {
     public void setUserAccount(FirestoreUserAccount userAccount) throws
             InterruptedException, ExecutionException {
         final CollectionReference collectionRef = firestore.collection(COLLECTION_NAME);
-        final DocumentReference docRef = collectionRef.document();
+        final DocumentReference docRef = collectionRef.document(userAccount.getUsername());
 
         ApiFuture<WriteResult> result = docRef.create(userAccount);
         result.get();
-        throw new UnsupportedOperationException("A faire");
+//        throw new UnsupportedOperationException("A faire");
     }
 }
