@@ -14,6 +14,7 @@ import org.springframework.web.context.ServletContextAware;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Contrôleur qui gère l'API de messages.
@@ -34,7 +35,7 @@ public class MessageController implements ServletContextAware {
     }
 
     @PostMapping(MESSAGES_PATH)
-    public ResponseEntity<String> createMessage(@RequestBody Message msgBody) {
+    public ResponseEntity<String> createMessage(@RequestBody Message msgBody) throws ExecutionException, InterruptedException {
         messageRepository.createMessage(msgBody);
         webSocketManager.notifySessions();
         return ResponseEntity.status(HttpStatus.CREATED).body("\"Msg created\"");
