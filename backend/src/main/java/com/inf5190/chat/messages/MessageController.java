@@ -42,7 +42,7 @@ public class MessageController implements ServletContextAware {
     }
 
     @GetMapping(MESSAGES_PATH)
-    public List<Message> getMessages(@RequestParam Optional<Long> fromId) {
+    public List<Message> getMessages(@RequestParam Optional<String> fromId) throws ExecutionException, InterruptedException {
         return messageRepository.getMessages(fromId);
     }
 
