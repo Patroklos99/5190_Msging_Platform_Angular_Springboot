@@ -13,7 +13,6 @@ export class MessagesService implements OnDestroy{
 
 	constructor(private httpClient: HttpClient, private webSocket: WebsocketService) {
 		this.connectToWebSocket();
-		// this.refreshMessages();
 	}
 
 	async postMessage(message: Message): Promise<void> {
