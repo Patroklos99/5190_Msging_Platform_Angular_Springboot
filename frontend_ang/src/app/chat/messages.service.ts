@@ -62,4 +62,9 @@ export class MessagesService implements OnDestroy{
 		);
 		response.then(list => this.messages.next([...this.messages.value, ...list]));
 	}
+
+	clearMessages() {
+		this.messages.next([]);
+	}
+
 }

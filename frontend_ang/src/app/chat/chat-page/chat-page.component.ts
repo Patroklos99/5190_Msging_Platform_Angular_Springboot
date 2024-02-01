@@ -61,14 +61,15 @@ export class ChatPageComponent implements OnInit, OnDestroy {
 		this.messagesService.refreshMessages();
 	}
 
-	onLogout() {
-		this.loginService.logout()
-		this.router.navigate(['/'])
+	async onLogout() {
+		await this.loginService.logout()
+		await this.router.navigate(['/'])
+		this.messagesService.clearMessages()
 	}
 
-	onSendMsg(msgTxt: string) {
+	async onSendMsg(msgTxt: string) {
 		if (this.username) {
-			this.messagesService.postMessage({
+			await this.messagesService.postMessage({
 				id: null,
 				text: msgTxt,
 				username: this.username,
