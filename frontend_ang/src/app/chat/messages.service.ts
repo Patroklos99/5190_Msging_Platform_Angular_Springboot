@@ -1,6 +1,6 @@
 import {Injectable, OnDestroy} from "@angular/core";
 import {BehaviorSubject, firstValueFrom, Observable} from "rxjs";
-import {Message} from "./message.model";
+import {Message, MessageRequest} from "./message.model";
 import {HttpClient, HttpParams} from "@angular/common/http";
 import {environment} from "../../environments/environment";
 import {WebsocketService} from "../app.WebsocketService";
@@ -15,15 +15,14 @@ export class MessagesService implements OnDestroy{
 		this.connectToWebSocket();
 	}
 
-	async postMessage(message: Message): Promise<void> {
+	async postMessage(message: MessageRequest): Promise<void> {
 		const response = await firstValueFrom(
 			this.httpClient.post(
 				`${environment.backendUrl}/messages`,
 				{
-					id: message.id,
 					username: message.username,
-					timestamp: message.timestamp,
-					text: message.text
+					text: message.text,
+					imageDate: message.imageData
 				}
 			)
 		)

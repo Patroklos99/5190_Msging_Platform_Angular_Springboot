@@ -1,7 +1,7 @@
 import {Component, OnDestroy, OnInit} from "@angular/core";
 import {Subscription} from "rxjs";
 import {AuthenticationService} from "../../login/authentication.service";
-import {Message} from "../message.model";
+import {ChatImageData, Message} from "../message.model";
 import {MessagesService} from "../messages.service";
 import {FormBuilder, ReactiveFormsModule} from "@angular/forms";
 import {AsyncPipe, DatePipe, NgForOf, NgIf} from "@angular/common";
@@ -68,12 +68,12 @@ export class ChatPageComponent implements OnInit, OnDestroy {
 	}
 
 	async onSendMsg(msgTxt: string) {
+		let imageDate : ChatImageData | null = null;
 		if (this.username) {
 			await this.messagesService.postMessage({
-				id: null,
 				text: msgTxt,
 				username: this.username,
-				timestamp: Date.now(),
+				imageData: imageDate
 			});
 			this.mensaje$.subscribe(m => this.messages = m);
 		}
