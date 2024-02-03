@@ -2,6 +2,7 @@ package com.inf5190.chat.messages;
 
 import com.inf5190.chat.auth.session.SessionDataAccessor;
 import com.inf5190.chat.messages.model.Message;
+import com.inf5190.chat.messages.model.MessageRequest;
 import com.inf5190.chat.messages.repository.MessageRepository;
 import com.inf5190.chat.websocket.WebSocketManager;
 
@@ -35,7 +36,7 @@ public class MessageController implements ServletContextAware {
     }
 
     @PostMapping(MESSAGES_PATH)
-    public ResponseEntity<String> createMessage(@RequestBody Message msgBody) throws ExecutionException, InterruptedException {
+    public ResponseEntity<String> createMessage(@RequestBody MessageRequest msgBody) throws ExecutionException, InterruptedException {
         messageRepository.createMessage(msgBody);
         webSocketManager.notifySessions();
         return ResponseEntity.status(HttpStatus.CREATED).body("\"Msg created\"");

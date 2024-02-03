@@ -1,19 +1,17 @@
 package com.inf5190.chat.messages.repository;
 
+import java.time.Instant;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicLong;
-import java.util.stream.Collectors;
 
 import com.google.api.core.ApiFuture;
 import com.google.cloud.Timestamp;
 
 import com.google.cloud.firestore.*;
 import com.google.firebase.cloud.FirestoreClient;
-import com.inf5190.chat.auth.repository.FirestoreUserAccount;
-import com.inf5190.chat.auth.repository.UserAccountRepository;
 import com.inf5190.chat.messages.model.Message;
-import org.checkerframework.common.value.qual.EnsuresMinLenIf;
+import com.inf5190.chat.messages.model.MessageRequest;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -47,22 +45,23 @@ public class MessageRepository {
             FirestoreMessage firestoreMsg = docSnaphot.toObject(FirestoreMessage.class);
 
             assert firestoreMsg != null;
-            Message message = new Message(docSnaphot.getId(), firestoreMsg.getUsername(), firestoreMsg.getTimestamp().toDate().getTime(), firestoreMsg.getText());
+            Message message = new Message(docSnaphot.getId(), firestoreMsg.getUsername(), firestoreMsg.getTimestamp().toDate().getTime(), firestoreMsg.getText(), firestoreMsg.getImageUrl());
             result.add(message);
         }
         return result;
     }
 
-    public Message createMessage(Message message) throws ExecutionException, InterruptedException {
-//        Message msg1 = new Message(idGenerator.getAndIncrement(), message.username(), message.timestamp(), message.text());
+    public Message createMessage(MessageRequest message) throws ExecutionException, InterruptedException {
+//        Message msg1 = new Message(idGenerator.getAndIncrement(), message.text(), message.timestamp(), message.textt());
 //        messages.add(msg1);
-        Timestamp timestamp = Timestamp.of(new java.sql.Timestamp(message.timestamp()));
-        FirestoreMessage firestoreMessage = new FirestoreMessage(message.username(), timestamp, message.text());
+        String imageUrl = null;
+        Timestamp timestamp = Timestamp.of(Date.from(Instant.now()));
+        FirestoreMessage firestoreMessage = new FirestoreMessage(message.username(), Timestamp.now(), message.text(), imageUrl);
         final CollectionReference collectionRef = firestore.collection(COLLECTION_NAME);
         final DocumentReference docRef = collectionRef.document();
         final ApiFuture<WriteResult> apiFuture = docRef.create(firestoreMessage);
         WriteResult writeResult = apiFuture.get();
-        return new Message(docRef.getId(), message.username(), writeResult.getUpdateTime().toDate().getTime(), message.text());
+        return new Message(docRef.getId(), message.text(), writeResult.getUpdateTime().toDate().getTime(), message.text(), imageUrl);
     }
 
 }

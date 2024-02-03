@@ -22,7 +22,7 @@ export class MessagesService implements OnDestroy{
 				{
 					username: message.username,
 					text: message.text,
-					imageDate: message.imageData
+					imageData: message.imageData
 				}
 			)
 		)
