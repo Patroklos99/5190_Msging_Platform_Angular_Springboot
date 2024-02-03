@@ -10,6 +10,9 @@ import {MessagesComponent} from "../messages/messages.component";
 import {NewMsgFormComponent} from "../new-msg-form/new-msg-form.component";
 import {Router} from '@angular/router';
 import {WebsocketService} from "../../app.WebsocketService";
+import {FileReaderService} from "../FileReaderService";
+import {HttpErrorResponse} from "@angular/common/http";
+import {error} from "@angular/compiler-cli/src/transformers/util";
 
 @Component({
 	selector: "app-chat-page",
@@ -37,8 +40,8 @@ export class ChatPageComponent implements OnInit, OnDestroy {
 	constructor(
 		private messagesService: MessagesService,
 		private loginService: LoginService,
-		private authenticationService: AuthenticationService,
 		private router: Router,
+		private fileReader : FileReaderService,
 	) {
 		this.usernameSubscription = this.username$.subscribe((u) => {
 			this.username = u;
@@ -67,15 +70,29 @@ export class ChatPageComponent implements OnInit, OnDestroy {
 		this.messagesService.clearMessages()
 	}
 
-	async onSendMsg(msgTxt: string) {
-		let imageDate : ChatImageData | null = null;
+	async onSendMsg(event: { msgTxt: string, file: File | null }) {
 		if (this.username) {
-			await this.messagesService.postMessage({
-				text: msgTxt,
-				username: this.username,
-				imageData: imageDate
-			});
-			this.mensaje$.subscribe(m => this.messages = m);
+			let imageData: ChatImageData | null = null;
+			if (event.file) {
+				let retour = await this.fileReader.readFile(event.file);
+				imageData = {
+					data: retour.data,
+					type: retour.type
+				}
+
+			}
+			try {
+				await this.messagesService.postMessage({
+					text: event.msgTxt,
+					username: this.username,
+					imageData: imageData
+				});
+			} catch (e) {
+				if (e instanceof HttpErrorResponse) {
+					console.log("error aca")
+				}
+			}
+			// this.mensaje$.subscribe(m => this.messages = m);
 		}
 	}
 }

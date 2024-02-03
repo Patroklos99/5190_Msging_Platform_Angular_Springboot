@@ -16,6 +16,7 @@ export class MessagesService implements OnDestroy{
 	}
 
 	async postMessage(message: MessageRequest): Promise<void> {
+		// console.log(message);
 		const response = await firstValueFrom(
 			this.httpClient.post(
 				`${environment.backendUrl}/messages`,
@@ -26,6 +27,7 @@ export class MessagesService implements OnDestroy{
 				}
 			)
 		)
+		console.log(response)
 	}
 
 	ngOnDestroy() : void {

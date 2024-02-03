@@ -1,4 +1,3 @@
-debugger
 import {Injectable} from '@angular/core';
 import {
 	HttpInterceptor,
