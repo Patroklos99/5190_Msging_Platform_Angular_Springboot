@@ -5,6 +5,7 @@
         </h3>
         <p>
             [{{ m.timestamp | date : "hh:mm" }}] {{ m.username }} : {{ m.text }}
+            <img *ngIf="m.imageUrl" [src]="m.imageUrl" alt="use image" height="100px">
         </p>
     </div>
 </div>

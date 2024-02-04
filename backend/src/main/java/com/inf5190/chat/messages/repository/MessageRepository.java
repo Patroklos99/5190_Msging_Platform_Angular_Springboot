@@ -9,9 +9,13 @@ import com.google.api.core.ApiFuture;
 import com.google.cloud.Timestamp;
 
 import com.google.cloud.firestore.*;
+import com.google.cloud.storage.Bucket;
+import com.google.cloud.storage.Storage;
 import com.google.firebase.cloud.FirestoreClient;
+import com.google.firebase.cloud.StorageClient;
 import com.inf5190.chat.messages.model.Message;
 import com.inf5190.chat.messages.model.MessageRequest;
+import io.jsonwebtoken.io.Decoders;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -21,6 +25,7 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public class MessageRepository {
+    private static final String BUCKET_NAME = "chat-project-d5a0e.appspot.com";
     private final List<Message> messages = new ArrayList<>();
     private final AtomicLong idGenerator = new AtomicLong(0);
     private final Firestore firestore = FirestoreClient.getFirestore();
@@ -55,10 +60,17 @@ public class MessageRepository {
 //        Message msg1 = new Message(idGenerator.getAndIncrement(), message.text(), message.timestamp(), message.textt());
 //        messages.add(msg1);
         String imageUrl = null;
-        Timestamp timestamp = Timestamp.of(Date.from(Instant.now()));
-        FirestoreMessage firestoreMessage = new FirestoreMessage(message.username(), Timestamp.now(), message.text(), imageUrl);
         final CollectionReference collectionRef = firestore.collection(COLLECTION_NAME);
         final DocumentReference docRef = collectionRef.document();
+        if (message.imageData() != null) {
+            Bucket b = StorageClient.getInstance().bucket(BUCKET_NAME);
+            String path = String.format("images/%s.%s", docRef.getId(), message.imageData().type());
+            b.create(path, Decoders.BASE64.decode(message.imageData().data()),
+                    com.google.cloud.storage.Bucket.BlobTargetOption.predefinedAcl(Storage.PredefinedAcl.PUBLIC_READ));
+            imageUrl = String.format("https://storage.googleapis.com/%s/%s", BUCKET_NAME, path);
+        }
+
+        FirestoreMessage firestoreMessage = new FirestoreMessage(message.username(), Timestamp.now(), message.text(), imageUrl);
         final ApiFuture<WriteResult> apiFuture = docRef.create(firestoreMessage);
         WriteResult writeResult = apiFuture.get();
         return new Message(docRef.getId(), message.text(), writeResult.getUpdateTime().toDate().getTime(), message.text(), imageUrl);
