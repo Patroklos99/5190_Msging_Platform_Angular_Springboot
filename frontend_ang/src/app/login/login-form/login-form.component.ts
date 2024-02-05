@@ -2,6 +2,7 @@ import {Component, EventEmitter, OnInit, Output} from "@angular/core";
 import {FormBuilder, ReactiveFormsModule, Validators} from "@angular/forms";
 import {UserCredentials} from "../model/user-credentials";
 import {NgClass, NgIf} from "@angular/common";
+import {LoginPageComponent} from "../login-page/login-page.component";
 
 @Component({
 	selector: "app-login-form",
@@ -24,14 +25,15 @@ export class LoginFormComponent implements OnInit {
 	@Output()
 	login = new EventEmitter<UserCredentials>();
 
-	constructor(private fb: FormBuilder) {
+	constructor(private fb: FormBuilder, private logineru: LoginPageComponent) {
 	}
 
 	ngOnInit(): void {
 	}
 
 	onLogin() {
-		if (this.loginForm.controls.username.value && this.loginForm.controls.password) {
+		console.log(this.loginForm.value.username, this.loginForm.value.password)
+		if (this.loginForm.value.username && this.loginForm.value.password) {
 			const usercredentials: UserCredentials = {
 				username: this.loginForm.value.username!,
 				password: this.loginForm.value.password!

@@ -10,7 +10,7 @@ import {environment} from "../../environments/environment";
 export class LoginService {
 	static KEY = 'username';
 	static TOKEN_KEY = 'QWERTY';
-	private token : string | null | undefined ;
+	private token: string | null | undefined;
 	private username = new BehaviorSubject<string | null>(null);
 
 	constructor(private httpClient: HttpClient) {
