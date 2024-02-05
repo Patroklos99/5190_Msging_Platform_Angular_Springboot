@@ -48,6 +48,7 @@ export class LoginService {
 		} finally {
 			localStorage.removeItem(LoginService.KEY);
 			localStorage.removeItem(LoginService.TOKEN_KEY);
+			localStorage.setItem("isLoggedIn", "false")
 			this.token = null;
 			this.username.next(null);
 		}

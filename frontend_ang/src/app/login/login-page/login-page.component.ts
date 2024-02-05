@@ -35,11 +35,6 @@ export class LoginPageComponent implements OnInit {
 					this.errorMessage = "Problème de Connexion";
 				}
 			}
-			this.snackBar.open(this.errorMessage, '', {
-				duration: 2000,
-				verticalPosition: 'bottom',
-				horizontalPosition: 'center'
-			});
 		});
 	}
 }
