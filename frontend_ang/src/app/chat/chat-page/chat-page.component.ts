@@ -41,7 +41,7 @@ export class ChatPageComponent implements OnInit, OnDestroy {
 		private messagesService: MessagesService,
 		private loginService: LoginService,
 		private router: Router,
-		private fileReader : FileReaderService,
+		private fileReader: FileReaderService,
 	) {
 		this.usernameSubscription = this.username$.subscribe((u) => {
 			this.username = u;
@@ -88,8 +88,9 @@ export class ChatPageComponent implements OnInit, OnDestroy {
 					imageData: imageData
 				});
 			} catch (e) {
-				if (e instanceof HttpErrorResponse) {
-					console.log("error aca")
+				if (e instanceof HttpErrorResponse && e.status === 403) {
+					await this.onLogout();
+					await this.router.navigate(['/']);
 				}
 			}
 			// this.mensaje$.subscribe(m => this.messages = m);
