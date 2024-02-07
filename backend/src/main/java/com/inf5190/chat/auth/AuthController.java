@@ -68,8 +68,15 @@ public class AuthController implements ServletContextAware {
 
     @PostMapping("auth/logout")
     public void logout() {
-        String token = sessionDataAccessor.getToken(servletContext);
-        sessionManager.removeSession(token);
+        try {
+            String token = sessionDataAccessor.getToken(servletContext);
+            sessionManager.removeSession(token);
+        } catch (ResponseStatusException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,
+                    "Unexpected error on logout");
+        }
     }
 
     @Override

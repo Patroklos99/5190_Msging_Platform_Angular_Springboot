@@ -12,6 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.ServletContextAware;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
@@ -36,9 +37,16 @@ public class MessageController implements ServletContextAware {
     }
 
     @PostMapping(MESSAGES_PATH)
-    public ResponseEntity<String> createMessage(@RequestBody MessageRequest msgBody) throws ExecutionException, InterruptedException {
-        messageRepository.createMessage(msgBody);
-        webSocketManager.notifySessions();
+    public ResponseEntity<String> postMessage(@RequestBody MessageRequest msgBody) throws ExecutionException, InterruptedException {
+        try {
+            messageRepository.createMessage(msgBody);
+            webSocketManager.notifySessions();
+        } catch (ResponseStatusException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,
+                    "Unexpected error on post message.");
+        }
         return ResponseEntity.status(HttpStatus.CREATED).body("\"Msg created\"");
     }
 
