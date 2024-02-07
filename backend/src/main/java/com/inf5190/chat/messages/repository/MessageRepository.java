@@ -16,6 +16,8 @@ import com.google.firebase.cloud.StorageClient;
 import com.inf5190.chat.messages.model.Message;
 import com.inf5190.chat.messages.model.MessageRequest;
 import io.jsonwebtoken.io.Decoders;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -30,6 +32,10 @@ public class MessageRepository {
     private final AtomicLong idGenerator = new AtomicLong(0);
     private final Firestore firestore = FirestoreClient.getFirestore();
     private static final String COLLECTION_NAME = "messages";
+
+//    @Autowired
+//    @Qualifier("storageBucketName")
+//    private String storageBucketName;
 
     public MessageRepository() {
     }
