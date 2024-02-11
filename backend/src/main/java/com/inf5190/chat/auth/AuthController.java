@@ -4,6 +4,7 @@ import com.inf5190.chat.auth.session.SessionData;
 import jakarta.servlet.ServletContext;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.ServletContextAware;
@@ -43,13 +44,14 @@ public class AuthController implements ServletContextAware {
     }
 
     @PostMapping("auth/login")
-    public LoginResponse login(@RequestBody LoginRequest loginRequest) throws ExecutionException, InterruptedException {
+    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest) throws ExecutionException, InterruptedException {
         FirestoreUserAccount client = this.userAcctRepo.getUserAccount(loginRequest.username());
         if (client != null) {
             if (this.passEncoder.matches(loginRequest.password(), client.getEncodedPassword())) {
                 SessionData sessionData = new SessionData(loginRequest.username());
                 String token = sessionManager.addSession(sessionData);
-                return new LoginResponse(token);
+//        return new LoginResponse(token);
+                return ResponseEntity.status(HttpStatus.OK).body(new LoginResponse(token));
             } else {
                 throw new ResponseStatusException(HttpStatus.FORBIDDEN);
             }
@@ -63,7 +65,8 @@ public class AuthController implements ServletContextAware {
 
         SessionData sessionData = new SessionData(loginRequest.username());
         String token = sessionManager.addSession(sessionData);
-        return new LoginResponse(token);
+//        return new LoginResponse(token);
+        return ResponseEntity.status(HttpStatus.OK).body(new LoginResponse(token));
     }
 
     @PostMapping("auth/logout")

@@ -2,8 +2,34 @@ package com.inf5190.chat.messages.repository;
 
 import com.google.cloud.Timestamp;
 
+import java.util.Objects;
+
 public class FirestoreMessage {
     private String username;
+
+    @Override
+    public String toString() {
+        return "FirestoreMessage{" +
+                "username='" + username + '\'' +
+                ", timestamp=" + timestamp +
+                ", text='" + text + '\'' +
+                ", imageUrl='" + imageUrl + '\'' +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        FirestoreMessage that = (FirestoreMessage) o;
+        return Objects.equals(username, that.username) && Objects.equals(timestamp, that.timestamp) && Objects.equals(text, that.text) && Objects.equals(imageUrl, that.imageUrl);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(username, timestamp, text, imageUrl);
+    }
+
     private Timestamp timestamp;
     private String text;
     private String imageUrl;
