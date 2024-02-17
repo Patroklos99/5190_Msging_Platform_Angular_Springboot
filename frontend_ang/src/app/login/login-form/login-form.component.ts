@@ -32,7 +32,6 @@ export class LoginFormComponent implements OnInit {
 	}
 
 	onLogin() {
-		console.log(this.loginForm.value.username, this.loginForm.value.password)
 		if (this.loginForm.value.username && this.loginForm.value.password) {
 			const usercredentials: UserCredentials = {
 				username: this.loginForm.value.username!,
