@@ -51,7 +51,7 @@ public class TestAuthController {
     public void setup() {
         MockitoAnnotations.openMocks(this);
         this.authController = new AuthController(mockSessionManager, mockSessionDataAccessor,
-                mockAccountRepository, mockPasswordEncoder);
+                mockPasswordEncoder, mockAccountRepository);
     }
 
     @Test

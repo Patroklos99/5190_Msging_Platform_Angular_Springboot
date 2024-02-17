@@ -8,6 +8,7 @@ import java.util.Optional;
 
 import javax.annotation.PostConstruct;
 
+import com.inf5190.chat.auth.filter.AuthFilter;
 import com.inf5190.chat.messages.MessageController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,11 +27,12 @@ import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.cloud.FirestoreClient;
 import com.google.firebase.cloud.StorageClient;
-import com.inf5190.chat.auth.filter.AuthFilter;
 
 import com.inf5190.chat.auth.session.SessionDataAccessor;
 import com.inf5190.chat.auth.session.SessionManager;
+import org.springframework.stereotype.Component;
 
+@Component
 @SpringBootApplication
 @PropertySource("classpath:firebase.properties")
 @PropertySource("classpath:cors.properties")
@@ -89,17 +91,17 @@ public class ChatApplication {
         return new BCryptPasswordEncoder();
     }
 
-    //Problem with the AuthFilter class that uses sessionDataAccessor
-//    @Bean
-//    public FilterRegistrationBean<AuthFilter> authenticationFilter(SessionDataAccessor sessionDataAccessor,
-//            SessionManager sessionManager) {
-//        FilterRegistrationBean<AuthFilter> registrationBean = new FilterRegistrationBean<>();
-//
-//        registrationBean.setFilter(new AuthFilter(sessionDataAccessor, sessionManager));
-//        registrationBean.addUrlPatterns(MessageController.MESSAGES_PATH, "/auth/logout");
-//
-//        return registrationBean;
-//    }
+//        Problem with the AuthFilter class that uses sessionDataAccessor
+    @Bean
+    public FilterRegistrationBean<AuthFilter> authenticationFilter(
+            SessionDataAccessor sessionDataAccessor, SessionManager sessionManager) {
+        FilterRegistrationBean<AuthFilter> registrationBean = new FilterRegistrationBean<>();
+
+        registrationBean.setFilter(new AuthFilter(sessionDataAccessor, sessionManager));
+        registrationBean.addUrlPatterns("/messages", "/auth/logout");
+
+        return registrationBean;
+    }
 
     @Bean("allowedOrigins")
     public String[] getAllowedOrigins() {
