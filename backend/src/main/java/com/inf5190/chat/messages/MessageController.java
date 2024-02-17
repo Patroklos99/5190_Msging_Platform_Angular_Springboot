@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.ServletContextAware;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
@@ -22,6 +23,7 @@ import java.util.concurrent.ExecutionException;
  * Contrôleur qui gère l'API de messages.
  */
 @RestController
+//@CrossOrigin(origins = "*", allowedHeaders = "*") // Customize as needed
 @CrossOrigin(origins = "http://localhost:4200")
 public class MessageController implements ServletContextAware {
     public static final String MESSAGES_PATH = "/messages";
@@ -52,7 +54,15 @@ public class MessageController implements ServletContextAware {
 
     @GetMapping(MESSAGES_PATH)
     public List<Message> getMessages(@RequestParam Optional<String> fromId) throws ExecutionException, InterruptedException {
-        return messageRepository.getMessages(fromId);
+        List<Message> list = new ArrayList<>();
+        try {
+            list = messageRepository.getMessages(fromId);
+        } catch (ResponseStatusException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Unexpected error on get message.");
+        }
+        return list;
     }
 
     @Override

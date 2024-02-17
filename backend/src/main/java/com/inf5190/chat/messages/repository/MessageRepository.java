@@ -18,7 +18,9 @@ import com.inf5190.chat.messages.model.MessageRequest;
 import io.jsonwebtoken.io.Decoders;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.server.ResponseStatusException;
 
 /**
  * Classe qui gère la persistence des messages.
@@ -48,6 +50,8 @@ public class MessageRepository {
         if (fromId.isPresent()) {
             ApiFuture<DocumentSnapshot> future = collectionRef.document(fromId.get()).get();
             DocumentSnapshot snapshot = future.get();
+            if(!snapshot.exists())
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND);
             query = collectionRef.orderBy("timestamp", Query.Direction.ASCENDING).startAfter(snapshot);
         }
 
