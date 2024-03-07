@@ -39,9 +39,6 @@ public class SessionManager {
 
         String sessionId = generateSessionId();// Generate a unique session ID
         sessions.put(sessionId, authData);// Include the session data in the sessions map
-//        final String sessionId = this.generateSessionId();
-//        this.sessions.put(sessionId, authData);
-//        return sessionId;
         return token.compact();
     }
 

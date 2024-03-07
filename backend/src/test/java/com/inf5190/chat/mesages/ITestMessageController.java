@@ -11,13 +11,11 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 
 import com.google.cloud.Timestamp;
@@ -96,7 +94,86 @@ public class ITestMessageController {
 
         assertThat(response.getStatusCodeValue()).isEqualTo(200);
 
-        // Valider les messages...
+        assertThat(response.getBody().length == 2);
+        assertThat(response.getBody()[0].username().equals("u1"));
+        assertThat(response.getBody()[1].username().equals("u2"));
+    }
+
+    @Test
+    public void getMessagesMoreThan20() throws ExecutionException, InterruptedException {
+
+        for (int i = 3; i < 30; i++)
+            this.firestore.collection("messages").document(Integer.toString(i)).create(this.message1).get();
+        final String token = this.login();
+
+        final HttpHeaders header = new HttpHeaders();
+        header.add("Authorization", "Bearer " + token);
+
+        final HttpEntity<Object> headers = new HttpEntity<Object>(header);
+        final ResponseEntity<Message[]> response = this.restTemplate.exchange(this.messagesEndpointUrl,
+                HttpMethod.GET, headers, Message[].class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        assertThat(Objects.requireNonNull(response.getBody()).length == 20);
+    }
+
+    @Test
+    public void getMessagesFromId() {
+        final String token = this.login();
+
+        final HttpHeaders header = new HttpHeaders();
+        header.add("Authorization", "Bearer " + token);
+
+        final HttpEntity<Object> headers = new HttpEntity<Object>(header);
+        final ResponseEntity<Message[]> response = this.restTemplate.exchange(this.messagesEndpointUrl + "?fromId=1",
+                HttpMethod.GET, headers, Message[].class);
+
+
+        assertThat(response.getBody().length == 1);
+        assertThat(response.getBody()[0].username().equals("u2"));
+        assertThat(response.getStatusCodeValue()).isEqualTo(200);
+    }
+
+    @Test
+    public void getMessagesFromIdInvalid() {
+        final String token = this.login();
+
+        final HttpHeaders header = new HttpHeaders();
+        header.add("Authorization", "Bearer " + token);
+
+        final HttpEntity<Object> headers = new HttpEntity<Object>(header);
+        final ResponseEntity<Object> response = this.restTemplate.exchange(this.messagesEndpointUrl + "?fromId=3",
+                HttpMethod.GET, headers, Object.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+    }
+
+    @Test
+    public void getMessagesBadToken() {
+        final String token = "tatataa";
+
+        final HttpHeaders header = new HttpHeaders();
+        header.add("Authorization", "Bearer " + token);
+
+        final HttpEntity<Object> headers = new HttpEntity<>(header);
+        final ResponseEntity<Object> response = this.restTemplate.exchange(this.messagesEndpointUrl,
+                HttpMethod.GET, headers, Object.class);
+
+        assertThat(response.getStatusCodeValue()).isEqualTo(403);
+    }
+
+    @Test
+    public void postMessagesBadToken() {
+        String token = "tatata";
+        final HttpHeaders header = new HttpHeaders();
+        header.add("Authorization", "Bearer " + token);
+
+        final HttpEntity<Object> headers = new HttpEntity<Object>(header);
+        final ResponseEntity<Object> response = this.restTemplate.exchange(this.messagesEndpointUrl,
+                HttpMethod.POST, headers, Object.class);
+
+        assertThat(response.getStatusCodeValue()).isEqualTo(403);
     }
 
     private String login() {
@@ -104,7 +181,7 @@ public class ITestMessageController {
                 new LoginRequest("username", "password"),
                 LoginResponse.class);
 
-        return response.username();
+        return response.token();
     }
 
     private static void checkEmulators() {

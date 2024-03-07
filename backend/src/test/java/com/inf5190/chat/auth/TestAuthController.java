@@ -57,15 +57,14 @@ public class TestAuthController {
     @Test
     public void loginExistingUserAccountWithCorrectPassword() throws InterruptedException, ExecutionException {
         final SessionData expectedSessionData = new SessionData(this.username);
-        final String expectedUsername = this.username;
+        final String expectedToken = "token";
 
         when(this.mockAccountRepository.getUserAccount(loginRequest.username())).thenReturn(userAccount);
         when(this.mockPasswordEncoder.matches(loginRequest.password(), this.hashedPassword)).thenReturn(true);
-        when(this.mockSessionManager.addSession(expectedSessionData)).thenReturn(expectedUsername);
+        when(this.mockSessionManager.addSession(expectedSessionData)).thenReturn(expectedToken);
 
         ResponseEntity<LoginResponse> response = this.authController.login(loginRequest);
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(response.getBody().username()).isEqualTo(expectedUsername);
+        assertThat(response.getBody().token()).isEqualTo(expectedToken);
 
         verify(this.mockAccountRepository, times(1)).getUserAccount(this.username);
         verify(this.mockPasswordEncoder, times(1)).matches(this.password, this.hashedPassword);
