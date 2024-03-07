@@ -26,7 +26,7 @@ import java.util.concurrent.ExecutionException;
 
 /**
  * Contrôleur qui gère l'API de login et logout.
- * <p>
+ *
  * Implémente ServletContextAware pour recevoir le contexte de la requête HTTP.
  */
 @RestController()
@@ -52,7 +52,7 @@ public class AuthController {
                 if (this.passwordEncoder.matches(loginRequest.password(), client.getEncodedPassword())) {
                     SessionData sessionData = new SessionData(client.getUsername());
                     String token = sessionManager.addSession(sessionData);
-                    return ResponseEntity.status(HttpStatus.OK).body(new LoginResponse(client.getUsername(), token));
+                    return ResponseEntity.status(HttpStatus.OK).body(new LoginResponse(token));
                 }
                 throw new ResponseStatusException(HttpStatus.FORBIDDEN);
             }
@@ -60,7 +60,7 @@ public class AuthController {
             SessionData sessionData = new SessionData(loginRequest.username());
             String token = sessionManager.addSession(sessionData);
 //            return new LoginResponse(token);
-            return ResponseEntity.status(HttpStatus.OK).body(new LoginResponse(client.getUsername(), token));
+            return ResponseEntity.status(HttpStatus.OK).body(new LoginResponse(token));
         } catch (ResponseStatusException e) {
             throw e;
         } catch (Exception e) {
@@ -70,9 +70,9 @@ public class AuthController {
     }
 
     @PostMapping("auth/logout")
-    public void logout(HttpServletRequest servletContext) {
+    public void logout() {
         try {
-            String token = sessionDataAccessor.getToken(servletContext);
+            String token = sessionDataAccessor.getToken();
             sessionManager.removeSession(token);
         } catch (ResponseStatusException e) {
             throw e;
