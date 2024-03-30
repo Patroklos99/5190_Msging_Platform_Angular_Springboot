@@ -6,6 +6,7 @@ import {loginPageGuard} from "./guards/login-page.guard";
 import {chatGuard} from "./guards/chat.guard";
 
 export const routes: Routes = [
-  {path : "", component: LoginPageComponent, canActivate: [loginPageGuard]},
-  {path : "chat", component: ChatPageComponent, canActivate: [chatGuard]},
+	{path: "", component: LoginPageComponent, canActivate: [loginPageGuard]},
+	{path: "chat", component: ChatPageComponent, canActivate: [chatGuard]},
+	{path: "**", redirectTo: "chat"} // Wildcard route for a 404 page
 ];
