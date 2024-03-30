@@ -23,7 +23,6 @@ import java.util.concurrent.ExecutionException;
  * Contrôleur qui gère l'API de messages.
  */
 @RestController
-//@CrossOrigin(origins = "*", allowedHeaders = "*") // Customize as needed
 @CrossOrigin(origins = "http://localhost:4200")
 public class MessageController implements ServletContextAware {
     public static final String MESSAGES_PATH = "/messages";
