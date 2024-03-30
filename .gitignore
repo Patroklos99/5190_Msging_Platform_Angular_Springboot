@@ -19,3 +19,10 @@
 /backend/target/classes/com/inf5190/chat/websocket/config/WebSocketConfig.class
 /backend/target/classes/com/inf5190/chat/websocket/WebSocketHandler.class
 /backend/target/classes/com/inf5190/chat/websocket/WebSocketManager.class
+/frontend_ang/.angular/
+/frontend_ang/node_modules/
+ui-debug.log
+storage.rules
+.firebaserc
+node_modules/
+firestore-debug.log
